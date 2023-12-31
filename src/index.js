@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { useEffect, useState } from "react";
+import "./index.css";
 
 const pizzaData = [
   {
@@ -48,12 +50,51 @@ const pizzaData = [
 
 function App() {
   return (
-    <>
-      <h1>Hello Samuel</h1>
+    <div className="container">
+      <Header />
+      <Menu />
+      <Footer />
+    </div>
+  );
+}
+
+function Header() {
+  // const style = { color: "red", fontSize: "40px", textTransform: "uppercase" };
+  return (
+    <header className="header">
+      <h1>Fast Same Pizza Co.</h1>
+    </header>
+  );
+}
+
+function Menu() {
+  return (
+    <main className="menu">
+      <h2>Our Menu</h2>
       <Pizza />
       <Pizza />
       <Pizza />
-    </>
+    </main>
+  );
+}
+
+function Footer() {
+  const [timer, setTimer] = useState(new Date().toLocaleTimeString());
+  const hour = new Date().getHours();
+  const openHour = 9;
+  const closeHour = 22;
+  const isOpen = hour >= openHour && hour <= closeHour;
+
+  useEffect(() => {
+    setInterval(() => {
+      setTimer(new Date().toLocaleTimeString());
+    }, 1000);
+  }, []);
+
+  return (
+    <footer className="footer">
+      {timer} {isOpen ? "We're currently open!" : "We're currently closed!"}
+    </footer>
   );
 }
 
@@ -61,7 +102,7 @@ function Pizza() {
   return (
     <div>
       <img src="pizzas/funghi.jpg" alt="Pizza Funghi" />
-      <h2>Pizza Funghi</h2>
+      <h3>Pizza Funghi</h3>
       <p>Tomato, mozarella, mushrooms, and onion</p>
     </div>
   );
