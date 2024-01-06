@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { useEffect, useState } from "react";
 import "./index.css";
 
 const pizzaData = [
@@ -68,42 +67,72 @@ function Header() {
 }
 
 function Menu() {
+  const pizzas = pizzaData;
+  const numPizzas = pizzas.length;
+
   return (
     <main className="menu">
       <h2>Our Menu</h2>
-      <Pizza />
-      <Pizza />
-      <Pizza />
+
+      {numPizzas > 0 ? (
+        <>
+          <p>
+            Authentic Italian cousine. 6 creative dishes to choose from. All
+            from our stone oven, all organic, all delicious.
+          </p>
+          <ul className="pizzas">
+            {pizzas.map((pizza) => (
+              <Pizza pizza={pizza} key={pizza.name} />
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>We're still working on our menu. Please come back later</p>
+      )}
     </main>
   );
 }
 
+function Pizza({ pizza }) {
+  // if (pizza.soldOut) return null;
+  return (
+    <li className={`pizza ${pizza.soldOut ? "sold-out" : ""}`}>
+      <img src={pizza.photoName} alt={pizza.name} />
+      <div>
+        <h3>{pizza.name}</h3>
+        <p>{pizza.ingredients}</p>
+        <span>{pizza.soldOut ? "Sold out" : pizza.price}</span>
+      </div>
+    </li>
+  );
+}
+
 function Footer() {
-  const [timer, setTimer] = useState(new Date().toLocaleTimeString());
   const hour = new Date().getHours();
   const openHour = 9;
   const closeHour = 22;
   const isOpen = hour >= openHour && hour <= closeHour;
 
-  useEffect(() => {
-    setInterval(() => {
-      setTimer(new Date().toLocaleTimeString());
-    }, 1000);
-  }, []);
-
   return (
     <footer className="footer">
-      {timer} {isOpen ? "We're currently open!" : "We're currently closed!"}
+      {isOpen ? (
+        <Order closeHour={closeHour} />
+      ) : (
+        <p>
+          We're happy to welcome you between{" "}
+          {openHour.toString().padStart(2, "0")}00hrs and {closeHour}
+          00hrs
+        </p>
+      )}
     </footer>
   );
 }
 
-function Pizza() {
+function Order({ closeHour }) {
   return (
-    <div>
-      <img src="pizzas/funghi.jpg" alt="Pizza Funghi" />
-      <h3>Pizza Funghi</h3>
-      <p>Tomato, mozarella, mushrooms, and onion</p>
+    <div className="order">
+      <p>We're open until {closeHour}00hrs. Come visit us or order online </p>
+      <button className="btn">Order</button>
     </div>
   );
 }
